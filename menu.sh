@@ -17,7 +17,7 @@ do
   read acao
   
   #Caso nao seja inteiro
-  if [[ !($acao =~ ^[0-4]+$) ]]; then 
+  if [[ !($acao =~ ^[0-4]$) ]]; then 
   echo -e "\nTem de digitar uma opcao valida"
   
   #Opcao 0

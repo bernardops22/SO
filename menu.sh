@@ -2,10 +2,9 @@
 
 #Acoes iniciais
 clear
-acao=5 
 
-#Ciclo "infinito"
-while [ $acao -ne 0 ] 
+#Ciclo infinito
+while [ 1 ] 
 do
 
   #Menu
@@ -18,10 +17,11 @@ do
   read acao
   
   #Caso nao seja inteiro
-  #if [ $acao NAO E INTEIRO ]; then echo -e "\n Tem de digitar um inteiro"
+  if [[ !($acao =~ ^[0-4]+$) ]]; then 
+  echo -e "\nTem de digitar uma opcao valida"
   
   #Opcao 0
-  if [ $acao -eq 0 ]; then exit
+  elif [ $acao -eq 0 ]; then exit
   
   #Opcao 1
   elif [ $acao -eq 1 ]; then ./cria_pacientes.sh 
@@ -48,14 +48,11 @@ do
     
   #Opcao 4
   elif [ $acao -eq 4 ]; then ./avalia_medicos.sh 
-  
-  #Outras opcoes
-  else echo -e "\nEssa opcao nao existe"
   fi
   
   #Finalizacao
-  echo -e "\nPrima qualquer tecla para continuar."
-  read tecla
+  echo ""
+  read -n 1 -s -p "Prima uma tecla para continuar"
   clear
   
 done

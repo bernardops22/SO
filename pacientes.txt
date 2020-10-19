@@ -7,4 +7,4 @@
 92449;Afonso Maria Pissarra Mendonca Centeno Neves;;;a92449@iscte-iul.pt;100
 93178;Afonso Pinheiro Sampaio;;;a93178@iscte-iul.pt;100
 90284;Alexandre Maggiolo Gordino Pinto Monteiro;;;a90284@iscte-iul.pt;100
-92416;Alexandre Quiterio Anastacio;Tomar;;a92416@iscte-iul.pt;100
+92416;Alexandre Quiterio Anastacio;;;a92416@iscte-iul.pt;100

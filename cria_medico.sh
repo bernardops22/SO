@@ -5,17 +5,21 @@ if [ $# -ne 4 ]; then
   echo -e "\nTem de colocar 4 argumentos"
   echo -e "Exemplo: ./cria_medico.sh \"Ana Correia\" 12345 \"dentista\" aguiar@gmail.com"
   exit
+
+#Excecoes especificas de cada argumento
+elif [[ $1 =~ [0-9]+$ ]] || [[ !($2 =~ [0-9]+$) ]] || [[ $3 =~ [0-9]+$ ]]; then
+  echo -e "\nArgumentos invalidos"
+  exit
 fi
 
-            #Lancar excecao quando NOME e ESPECIALIDADE contiverem integers, quando ID não for integer e quando email nao contiver "@"
-
 if [ -e medicos.txt ]; then
-  if grep -q $2 medicos.txt; then 
-  
-    #Excecao especifica (mandatory)
+
+  #Excecao especifica (mandatory)
+  ids=$(cat medicos.txt | cut -d";" -f2 | grep -w $2 | wc -l)
+  if [ $ids -eq 1 ]; then 
     echo -e "\nO medico com o numero de cedula profissional $2 ja esta registado\n"
     
-    #Resultados (quando o script termina é obrigatorio apresentar resultados ainda que nenhum medico seja registado)
+    #Resultados
     echo "-----Lista de medicos registados-----"
     cat medicos.txt | sort
     exit

@@ -1,12 +1,16 @@
-#!/bin/bash
+#!/bin/bash 
 
 #Lancamento de excecoes
 if [ $# -ne 2 ]; then
   echo -e "\nTem de colocar 2 argumentos do tipo LOCALIDADE SALDO"
   echo "Exemplo: ./stats.sh \"Lisboa\" 500"
   exit
+
+#Validacao de argumentos
+elif [[ $1 =~ [0-9]+$ ]] || [[ !($2 =~ [0-9]+$) ]]; then
+  echo -e "\nArgumentos invalidos"
+  exit
 fi
-                                            #Lancar excecao quando LOCALIDADE contiver integers e quando saldo não é integer
 
 #Pesquisa dentro dos dois ficheiros
 if [ -e pacientes.txt ] && [ -e medicos.txt ]; then

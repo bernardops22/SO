@@ -15,7 +15,6 @@ if [ -e medicos.txt ]; then
     if [ $numeroconsultas -gt 6 ] && [ $rating -lt 5 ]; then 
       nome=$(echo $line | cut -d";" -f1)
       echo $line >> lista_negra_medicos.txt
-      #echo "Nome: $nome | Rating: $rating | Consultas: $numeroconsultas" >> lista_negra_medicos.txt 
     fi
   done
   

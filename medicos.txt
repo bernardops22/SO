@@ -1,0 +1,5 @@
+Ana Correia;123456;dentista;aguiar@gmail.com;4;7;400
+João Vieira;54321;clinica geral;vieira@gmail.com;3;8;600
+João Vieira;44321;clinica geral;vieira@gmail.com;5;8;505
+Ana Correia;13456;dentista;aguiar@gmail.com;4;7;4000
+Bernardo Santos;1234567891;pediatria;boeo@gmail.com;0;0;0

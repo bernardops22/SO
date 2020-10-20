@@ -1,0 +1,9 @@
+pjp:x:1006:1020:Paulo Pereira,,,:/home/pjp:/bin/bash
+labso:x:1011:1006:labso,,,:/home/labso:/bin/bash
+rfonseca:x:1308:1006:Ricardo Fonseca,,,:/home/rfonseca:/bin/bash
+fprudencio:x:1309:1006:Filipa Prudencio,,,:/home/fprudencio:/bin/bash
+a92509:x:1015:1006:Afonso Costa Brandao de Figueiredo,,,:/home/a92509:/bin/bash
+a87895:x:1016:1006:Afonso Goncalo de Moura Rolo Leal Goncalves,,,:/home/a87895:/bin/bash
+a92475:x:1017:1006:Afonso Jose Tripa Geraldo,,,:/home/a92475:/bin/bash
+a93084:x:1018:1006:Afonso Lopes dos Santos Costa,,,:/home/a93084:/bin/bash
+antoni:x:1018:1006:Antonio Raminhos,,,:/home/antonioraminhos:/bin/bash

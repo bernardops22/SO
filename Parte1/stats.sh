@@ -1,13 +1,7 @@
 #!/bin/bash 
 
-#Lancamento de excecoes
-if [ $# -ne 2 ]; then
-  echo -e "\nTem de colocar 2 argumentos do tipo LOCALIDADE SALDO"
-  echo "Exemplo: ./stats.sh \"Lisboa\" 500"
-  exit
-
 #Validacao de argumentos
-elif [[ $1 =~ [0-9]+$ ]] || [[ !($2 =~ [0-9]+$) ]]; then
+if [ $(echo "${#1}") -eq 0 ] || [ $(echo "${#2}") -eq 0 ] || [[ $1 =~ [0-9]+$ ]] || [[ !($2 =~ [0-9]+$) ]]; then
   echo -e "\nArgumentos invalidos"
   exit
 fi
@@ -20,5 +14,5 @@ fi
 
 #Resultados
 echo -e "\n-----Stats-----"
-echo "Existem $pacientes paciente(s) que sao de $1."
-echo "Existem $medicos medico(s) com saldo superior a $2."
+echo "Existe(m) $pacientes paciente(s) de $1."
+echo "Existe(m) $medicos medico(s) com saldo superior a $2."

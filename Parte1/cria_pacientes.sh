@@ -9,8 +9,7 @@ cat /etc/passwd | grep "^a" | while read line
 do
   if [ $i -lt 10 ]; then
     identificacao=$(echo $line | cut -d":" -f1 | sed "s/a//")
-    idnumbers="${identificacao//[^[:digit:]]/}"
-    idnumbers=$(echo "${#idnumbers}") #ID com 5 numeros
+    idnumbers=$(awk -F '[0-9]' '{print NF-1}' <<< "$identificacao")
     idlength=$(echo "${#identificacao}") #ID com 5 caracteres
   
     #Filtro que mantem users do tipo aYYYYY com Y um inteiro

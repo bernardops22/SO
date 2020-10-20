@@ -60,6 +60,11 @@ do
   #Finalizacao
   echo ""
   read -n 1 -s -p "Prima uma tecla para continuar"
+  
+  # -n defines the required character count to stop reading
+  # -s hides the user's input
+  # -p this command does actually require the user to press enter
+  
   clear
   
 done

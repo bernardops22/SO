@@ -1,2 +1,2 @@
-Patricio Joao;13;Mentalist;patricio.joao@cbi.us.gov;0;0;0
-Joao Vermelho;0;Serial Killer;eusouojoaovermelho@cbi.us.gov;0;0;0
+Patricio Joao;13;Mentalist;patricio.joao@cbi.us.gov;0;0;101
+Joao Vermelho;0;Serial Killer;eusouojoaovermelho@cbi.us.gov;0;0;100

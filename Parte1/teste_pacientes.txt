@@ -1,0 +1,18 @@
+apjp:x:1006:1020:Paulo Pereira,,,:/home/pjp:/bin/bash
+labso:x:1011:1006:labso,,,:/home/labso:/bin/bash
+rfonseca:x:1308:1006:Ricardo Fonseca,,,:/home/rfonseca:/bin/bash
+fprudencio:x:1309:1006:Filipa Prudencio,,,:/home/fprudencio:/bin/bash
+antonioraminhos:x:1017:1006:Antonio Raminhos,,,:/home/antonio:/bin/bash
+antonioraminhos92439:x:1017:1006:Antonio Raminhos,,,:/home/antonio:/bin/bash
+a92509:x:1015:1006:Afonso Costa Brandao de Figueiredo,,,:/home/a92509:/bin/bash
+a87895:x:1016:1006:Afonso Goncalo de Moura Rolo Leal Goncalves,,,:/home/a87895:/bin/bash
+a92475:x:1017:1006:Afonso Jose Tripa Geraldo,,,:/home/a92475:/bin/bash
+a93084:x:1018:1006:Afonso Lopes dos Santos Costa,,,:/home/a93084:/bin/bash
+a92494:x:1019:1006:Afonso Manuel Barral Canico,,,:/home/a92494:/bin/bash
+a87973:x:1020:1006:Afonso Maria Correia de Araujo Capelo,,,:/home/a87973:/bin/bash
+a92449:x:1022:1006:Afonso Maria Pissarra Mendonca Centeno Neves,,,:/home/a92449:/bin/bash
+a93178:x:1023:1006:Afonso Pinheiro Sampaio,,,:/home/a93178:/bin/bash
+a90284:x:1024:1006:Alexandre Maggiolo Gordino Pinto Monteiro,,,:/home/a90284:/bin/bash
+a92416:x:1025:1006:Alexandre Quiterio Anastacio,,,:/home/a92416:/bin/bash
+antonioraminhos92439:x:1017:1006:Antonio Raminhos,,,:/home/antonio:/bin/bash
+

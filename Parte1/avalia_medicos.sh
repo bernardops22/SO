@@ -3,7 +3,7 @@
 #Acoes inicias
 rm -f lista_negra_medicos.txt
 
-if [ -e medicos.txt ]; then
+#if [ -e medicos.txt ]; then
 
   #Ciclo de pesquisa
   cat medicos.txt | while read line
@@ -19,6 +19,9 @@ if [ -e medicos.txt ]; then
   done
   
   #Resultados
-  echo -e "\n-----Lista negra de medicos na plataforma-----"
-  cat lista_negra_medicos.txt
-fi
+  if [ -e lista_negra_medicos.txt ]; then
+    echo -e "\n-----Lista negra de medicos na plataforma-----"
+    cat lista_negra_medicos.txt
+  else echo -e "\nNao existem medicos na lista negra"
+  fi  
+#fi

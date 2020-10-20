@@ -23,5 +23,6 @@ do
 done
 
 #Resultados (opcional)
+echo -e "\nLista de pacientes criada com sucesso!"
 echo -e "\n-----Lista de pacientes-----"
 cat pacientes.txt | sort

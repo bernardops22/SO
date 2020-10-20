@@ -40,14 +40,21 @@ do
     
   #Opcao 3
   elif [ $acao -eq 3 ]; then 
+  if [ -e pacientes.txt ] && [ -e medicos.txt ]; then
     echo -n -e "\nLocalidade: "
     read "localidade"
     echo -n "Saldo: "
     read saldo
     ./stats.sh "$localidade" $saldo
+  else echo -e "\nLista de medicos e/ou pacientes inexistentes. Tera de criar medicos/pacientes primeiro."
+  fi
     
   #Opcao 4
-  elif [ $acao -eq 4 ]; then ./avalia_medicos.sh 
+  elif [ $acao -eq 4 ]; then 
+  if [ -e medicos.txt ]; then
+  ./avalia_medicos.sh 
+  else echo -e "\nLista de medicos inexistente. Tera de criar medicos primeiro."
+  fi
   fi
   
   #Finalizacao

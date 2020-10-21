@@ -1,2 +1,1 @@
-Patricio Joao;13;Mentalist;patricio.joao@cbi.us.gov;0;0;101
-Joao Vermelho;0;Serial Killer;eusouojoaovermelho@cbi.us.gov;0;0;100
+Berni Sanders;92439;Pediatria;bphbs@iscte.pt;0;0;0

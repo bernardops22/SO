@@ -1,9 +1,6 @@
 #!/bin/bash
-
 #Acoes inicias
 rm -f lista_negra_medicos.txt
-
-#if [ -e medicos.txt ]; then
 
   #Ciclo de pesquisa
   cat medicos.txt | while read line
@@ -13,7 +10,6 @@ rm -f lista_negra_medicos.txt
     
     #Especificacao dos filtros
     if [ $numeroconsultas -gt 6 ] && [ $rating -lt 5 ]; then 
-      nome=$(echo $line | cut -d";" -f1)
       echo $line >> lista_negra_medicos.txt
     fi
   done
@@ -23,5 +19,4 @@ rm -f lista_negra_medicos.txt
     echo -e "\n-----Lista negra de medicos na plataforma-----"
     cat lista_negra_medicos.txt
   else echo -e "\nNao existem medicos na lista negra"
-  fi  
-#fi
+  fi

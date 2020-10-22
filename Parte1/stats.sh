@@ -7,7 +7,7 @@ if [ -z "$1" ] || [[ $1 =~ [0-9]+$ ]] || [[ !($2 =~ [0-9]+$) ]]; then
 fi
 
 #Pesquisa dentro dos dois ficheiros
-pacientes=$(cat "pacientes.txt" | cut -d";" -f3 | grep -w "$1" | wc -l)
+pacientes=$(cat "pacientes.txt" | cut -d";" -f3 | grep -x "$1" | wc -l)
 medicos=$(cat "medicos.txt" | cut -d";" -f7 | awk '$1 >'$2 | wc -l)
 
 #Resultados

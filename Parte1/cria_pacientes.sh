@@ -10,11 +10,10 @@ cat /etc/passwd | grep "^a" | while read line
 do
   if [ $i -lt $NUM_MIN_PAC ]; then
     identificacao=$(echo $line | cut -d":" -f1 | sed "s/a//")
-    idnumbers=$(awk -F '[0-9]' '{print NF-1}' <<< "$identificacao") #ID com 5 numeros
-    idlength=$(echo "${#identificacao}") #ID com 5 caracteres
+    idlength=$(echo "${#identificacao}")
   
     #Filtro que mantem users do tipo aYYYYY com Y um inteiro
-    if [[ $idnumbers -eq 5 ]] && [[ $idlength -eq 5 ]]; then
+    if [[ $identificacao =~ [0-9]+$ ]] && [[ $idlength -eq 5 ]]; then
       nome=$(echo $line | cut -d":" -f5 | sed "s/,,,//")
       echo $identificacao";"$nome";;;a"$identificacao"@iscte-iul.pt;"$SALDO_MIN >> pacientes.txt
       i=$(($i+1))

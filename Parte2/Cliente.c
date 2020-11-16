@@ -1,8 +1,6 @@
 #include "header.h"
-
+#define PID getpid()
 int n = 0;
-int ready = 0;
-int temp;
 
 /* ---*/
 Consulta nova_consulta(){
@@ -26,30 +24,28 @@ void pedido_consulta( Consulta c ){
 void trata_sinal( int sinal ){
   switch( sinal ){
    case SIGUSR2:
-     printf( "Consulta nao e possivel para o processo %d.\n", getpid() );
+     printf( "Consulta nao e possivel para o processo %d.\n", PID );
      remove( "PedidoConsulta.txt" );
      n=1;
-     ready = 1;
      break;
      
    case SIGHUP:
-     printf( "Consulta iniciada para o processo %d.\n", getpid() );
+     printf( "Consulta iniciada para o processo %d.\n", PID );
      remove( "PedidoConsulta.txt" );
      signal( SIGHUP,SIG_IGN );
      n=2;
-     ready = 1;
      break;
      
    case SIGTERM: 
      if( n==2 ){
-      printf( "Consulta concluida para o processo %d.\n",getpid() );
+      printf( "Consulta concluida para o processo %d.\n", PID );
       n=1;
       }
      else perror( "Erro" );
      break;
      
    case SIGALRM:
-     printf("");
+     printf( "Nao foi possivel contactar o servidor de consultas, tentando novamente.\n" );
      break;
      
    case SIGINT: 
@@ -60,21 +56,7 @@ void trata_sinal( int sinal ){
   }
 }
 
-void iniciar_consulta(){
-  int i = 1;
-  alarm( 5 );
-  while ( i != 4 ){
-    printf ( "\nA contactar o servidor.\nAguarde 5 segundos...\n" );
-    sleep( 5 );
-    if ( ready != 1 ) printf( "Nao foi possivel contactar o servidor de consultas, tentando novamente.\n" );
-    i++;
-  }
-  printf( "Nao foi possivel marcar consulta para o processo %d. Tente novamente mais tarde.\n", getpid() );
-  remove( "PedidoConsulta.txt" ); 
-  n = 1;
-}
-
-void contactar_servidor(){
+void get_srv_pid(){
   char pid_file[10];
   FILE* file = fopen( "SrvConsultas.pid", "r" );
   if ( file != NULL ) {
@@ -82,7 +64,20 @@ void contactar_servidor(){
     kill ( atoi( pid_file ), SIGUSR1 );
     fclose( file );
   }
-  iniciar_consulta();
+}
+
+void contactar_servidor(){
+  get_srv_pid();
+  int i = 1;
+  while ( i < 4 ){
+    alarm( 5 );
+    printf ( "\nA contactar o servidor.\nAguarde 5 segundos...\n" );
+    sleep( 5 );
+    i++;
+  }
+  printf( "\nNao foi possivel marcar consulta para o processo %d. Tente novamente mais tarde.\n\n", PID );
+  remove( "PedidoConsulta.txt" ); 
+  n = 1;
 } 
 
 /* --- */

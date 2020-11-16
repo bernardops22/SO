@@ -1,5 +1,4 @@
 #include "header.h"
-
 Consulta lista_consultas[10];
 int n = 0;
 
@@ -46,6 +45,6 @@ int main(){
   limpar_lista_consultas(lista_consultas);
   registar_pid();
   signal ( SIGUSR1, trata_sinal );
-  
-  while( n != 1 ) pause();
+  while( n != 1 ) 
+    pause();
 }

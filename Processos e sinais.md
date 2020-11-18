@@ -46,22 +46,22 @@ Consulta lista_consultas[10];
 
 O módulo de Servidor de Consultas é responsável pelas seguintes tarefas:
 
-S1) Inicia a lista de consultas com o campo tipo = –1 (“Limpar” a lista de consultas). Deverá ter um contador para cada tipo de consultas e um contador para número de consultas perdidas, todos iniciados a 0; 
+**S1)** Inicia a lista de consultas com o campo tipo = –1 (“Limpar” a lista de consultas). Deverá ter um contador para cada tipo de consultas e um contador para número de consultas perdidas, todos iniciados a 0; 
 
-S2) Regista o PID do seu processo no ficheiro SrvConsultas.pid; 
+**S2)** Regista o PID do seu processo no ficheiro SrvConsultas.pid; 
 
-S3) Arma e trata o sinal SIGUSR1 para que sejam tratados os pedidos de consultas que chegam ao sistema. Quando receber este sinal: 
+**S3)** Arma e trata o sinal SIGUSR1 para que sejam tratados os pedidos de consultas que chegam ao sistema. Quando receber este sinal: 
 
-S3.1) Lê a informação do ficheiro PedidoConsulta.txt 
+​	**S3.1)** Lê a informação do ficheiro PedidoConsulta.txt 
 
-S3.2) Escreve no ecrã a mensagem “Chegou novo pedido de consulta do tipo , descrição e PID ” com os campos preenchidos corretamente; 
+​	**S3.2)** Escreve no ecrã a mensagem “Chegou novo pedido de consulta do tipo , descrição e PID ” com os campos preenchidos corretamente; 
 
-S3.3) Verifica se a Lista de Consultas tem alguma “vaga”. Se todas as entradas da Lista de Consultas estiverem ocupadas, escreve no ecrã “Lista de consultas cheia”, manda um sinal SIGUSR2 ao processo , e incrementa o contador de consultas perdidas; 
+​	**S3.3)** Verifica se a Lista de Consultas tem alguma “vaga”. Se todas as entradas da Lista de Consultas estiverem ocupadas, escreve no ecrã “Lista de consultas cheia”, manda um sinal SIGUSR2 ao processo , e incrementa o contador de consultas perdidas; 
 
-S3.4) Insere a consulta na lista de consultas, com os campos devidamente preenchidos, escreve no ecrã “Consulta agendada para a sala <índice_da_lista>”, e incrementa o contador de consultas do tipo correspondente. O módulo Servidor então cria um processo filho (fork). O processo pai irá ficar à espera que o processo filho termine e quando isso acontecer, apaga a entrada correspondente da lista de consultas. Por sua vez, o novo processo filho: 
+​	**S3.4)** Insere a consulta na lista de consultas, com os campos devidamente preenchidos, escreve no ecrã “Consulta agendada para a sala <índice_da_lista>”, e incrementa o contador de consultas do tipo correspondente. O módulo Servidor então cria um processo filho (fork). O processo pai irá ficar à espera que o processo filho termine e quando isso acontecer, apaga a entrada correspondente da lista de consultas. Por sua vez, o novo processo filho: 
 
-S3.4.1) Envia um sinal SIGHUP ao processo  correspondente, a indicar o início da consulta; 
+​		**S3.4.1)** Envia um sinal SIGHUP ao processo  correspondente, a indicar o início da consulta; 
 
-S3.4.2) Aguarda 10 segundos e escreve no ecrã “Consulta terminada na sala <índice_da_lista>”. Envia um sinal SIGTERM ao processo  correspondente, e termina o processo filho. 
+​		**S3.4.2)** Aguarda 10 segundos e escreve no ecrã “Consulta terminada na sala <índice_da_lista>”. Envia um sinal SIGTERM ao processo  correspondente, e termina o processo filho. 
 
-S4) O módulo Servidor de Consultas deve armar e tratar o sinal SIGINT, para que possa ser encerrado pelo administrador com o atalho . Quando isso acontecer, deverá remover o ficheiro SrvConsultas.pid e atualizar um ficheiro binário StatsConsultas.dat com as estatísticas de consultas perdidas e nº de consultas de cada tipo, com os valores armazenados nesta sessão. Após atualizar as estatísticas, o processo Servidor deverá terminar.
+**S4)** O módulo Servidor de Consultas deve armar e tratar o sinal SIGINT, para que possa ser encerrado pelo administrador com o atalho . Quando isso acontecer, deverá remover o ficheiro SrvConsultas.pid e atualizar um ficheiro binário StatsConsultas.dat com as estatísticas de consultas perdidas e nº de consultas de cada tipo, com os valores armazenados nesta sessão. Após atualizar as estatísticas, o processo Servidor deverá terminar.

@@ -68,7 +68,7 @@ Nesta fase, o Rating, o nº de consultas efetuadas e o Saldo são mantidos a “
 
 Este script é executado pelo administrador do sistema para obter informações sobre o sistema. Nomeadamente, deve devolver a seguinte informação, consoante os argumentos passados:
 
-Número de Pacientes inscritos na Plataforma de uma **determinada localidade**; 
+• Número de Pacientes inscritos na Plataforma de uma **determinada localidade**; 
 
 • Número de Médicos inscritos na Plataforma com **saldo superior a um determinado valor**.
 

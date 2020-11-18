@@ -2,7 +2,7 @@
 
 Nesta parte do trabalho, será implementado um modelo simplificado de Triagem e Consultas de pacientes no sistema Cliniq-IUL, baseado em comunicação por sinais entre processos, utilizando a linguagem de programação C. Considere o seguinte diagrama, que apresenta uma visão geral da arquitetura pretendida:
 
-![image-20201118210209253](C:\Users\bphsa\AppData\Roaming\Typora\typora-user-images\image-20201118210209253.png)
+
 
 **Ideia Geral:** Pretende-se, nesta fase, simular a realização de consultas no sistema Cliniq-IUL. Assim, teremos dois módulos – Cliente e Servidor.
 

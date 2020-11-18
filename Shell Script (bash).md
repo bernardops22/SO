@@ -89,9 +89,13 @@ No caso de haver médicos inscritos na plataforma cujo número de consultas efet
 Este script agrega os restantes, mostrando um menu com as opções: 
 
 1 - Cria pacientes 
+
 2 - Cria médicos 
+
 3 - Stats 
+
 4 - Avalia médicos
+
 0 - Sair
 
 Cada uma das opções anteriores irá invocar o respetivo script descrito nas alíneas anteriores. No caso das opções 2 e 3, este script deverá pedir ao utilizador (administrador) as informações necessárias para execução dos scripts correspondentes, injetando as mesmas como argumentos desses scripts.

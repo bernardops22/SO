@@ -2,8 +2,6 @@
 
 Nesta parte do trabalho, será implementado um modelo simplificado de Triagem e Consultas de pacientes no sistema Cliniq-IUL, baseado em comunicação por sinais entre processos, utilizando a linguagem de programação C. Considere o seguinte diagrama, que apresenta uma visão geral da arquitetura pretendida:
 
-
-
 **Ideia Geral:** Pretende-se, nesta fase, simular a realização de consultas no sistema Cliniq-IUL. Assim, teremos dois módulos – Cliente e Servidor.
 
 ### Cliente.c
@@ -66,8 +64,4 @@ S3.4.1) Envia um sinal SIGHUP ao processo  correspondente, a indicar o início d
 
 S3.4.2) Aguarda 10 segundos e escreve no ecrã “Consulta terminada na sala <índice_da_lista>”. Envia um sinal SIGTERM ao processo  correspondente, e termina o processo filho. 
 
-S4) O módulo Servidor de Consultas deve armar e tratar o sinal SIGINT, para que possa ser encerrado pelo administrador com o atalho . Quando isso acontecer, deverá remover o ficheiro SrvConsultas.pid e atualizar um ficheiro binário StatsConsultas.dat com as estatísticas de consultas perdidas e nº de consultas de cada tipo, com os valores armazenados nesta sessão, do tipo:
-
-![image-20201118210545437](C:\Users\bphsa\AppData\Roaming\Typora\typora-user-images\image-20201118210545437.png)
-
-Após atualizar as estatísticas, o processo Servidor deverá terminar.
+S4) O módulo Servidor de Consultas deve armar e tratar o sinal SIGINT, para que possa ser encerrado pelo administrador com o atalho . Quando isso acontecer, deverá remover o ficheiro SrvConsultas.pid e atualizar um ficheiro binário StatsConsultas.dat com as estatísticas de consultas perdidas e nº de consultas de cada tipo, com os valores armazenados nesta sessão. Após atualizar as estatísticas, o processo Servidor deverá terminar.

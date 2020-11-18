@@ -1,19 +1,18 @@
 #include "Cliente.h"
 
 int main () {
-  c = nova_consulta ();
-  pedido_consulta ( c );
+  nova_consulta ();
+  pedido_consulta ();
   armar_sinal ();
   while ( n != 1 ) pause ();
 }
 
-Consulta nova_consulta (){
+void nova_consulta (){
   c.pid_consulta = PID;
   printf ( "\nInsira o tipo de consulta\n1 - Normal\n2 - COVID19\n3 - Urgente\nInserir: " );
   scanf ( "%d", &c.tipo );
   printf ( "Insira a descricao da consulta: " );
   scanf ( "\n%99[^\n]", &c.descricao );
-  return c;
 }
 
 void pedido_consulta (){

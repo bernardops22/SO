@@ -8,7 +8,7 @@ Consulta c;
 
 int n = 0;
 
-Consulta nova_consulta ();              //C1 C2
+void nova_consulta ();              //C1 C2
 void pedido_consulta ();                //C2 C8
 void get_srv_pid ();                    //C3
 void contactar_servidor ( int file );   //C3

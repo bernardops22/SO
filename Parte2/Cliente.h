@@ -1,15 +1,18 @@
 #ifndef __CLIENTE_H__
 #define __CLIENTE_H__
-
 #include "header.h"
 
-int n = 0;
 Consulta c;
 
-Consulta nova_consulta();
-void pedido_consulta();
-void contactar_servidor( int file );
-void get_srv_pid();
-void trata_sinal( int sinal );
+#define PID getpid ()
+
+int n = 0;
+
+Consulta nova_consulta ();              //C1 C2
+void pedido_consulta ();                //C2 C8
+void get_srv_pid ();                    //C3
+void contactar_servidor ( int file );   //C3
+void armar_sinal ();                    //C4 C5 C6 C7 C8
+void trata_sinal ( int sinal );         //C4 C5 C6 C7 C8
 
 #endif

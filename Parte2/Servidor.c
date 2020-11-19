@@ -1,14 +1,26 @@
 #include "Servidor.h"
 
 int main (){
+  iniciar_servidor();
   limpar_lista_consultas ( lista_consultas );
   registar_pid ();
   armar_sinal ();
   while ( n != 1 ) pause();
 }
 
+void iniciar_servidor (){
+  system ( "clear" );
+  printf( "\n + A iniciar o servidor" );
+  for ( int i = 1; i < 6; i++ ){
+    fflush( stdout );
+    sleep ( 1 );
+    printf ( "." );
+  }
+  printf ( "\n + Servidor iniciado com sucesso.\n + A aguardar pedidos de consulta.\n\n" );
+}
+
 void limpar_lista_consultas ( Consulta lista_consultas[] ){
-  for ( int i = 0; i < 10; i++ ) 
+  for ( int i = 0; i < 10; i++ )
     lista_consultas[i].tipo = -1;
 }
 
@@ -26,12 +38,13 @@ void armar_sinal (){
 void trata_sinal ( int sinal ){
   switch ( sinal ){
     case SIGUSR1:
-        nova_consulta();
-        verificar_vagas();
-        iniciar_consulta();
+        signal ( SIGINT, SIG_IGN );
+        nova_consulta ();
+        verificar_vagas ();
+        signal ( SIGINT, trata_sinal );
     break;
     case SIGINT:
-      desligar_servidor();
+      desligar_servidor ();
       break;
   }
 }
@@ -44,10 +57,10 @@ void nova_consulta (){
     fscanf ( file, "%[^\n]", c.descricao );
     fgets ( line, 100, file );
     c.pid_consulta = atoi ( fgets( line, PID_MAX, file ) );
-    printf ( "Chegou novo pedido de consulta do tipo %d, descricao '%s' e PID %d\n", c.tipo, c.descricao, c.pid_consulta );  
+    printf ( " + Chegou novo pedido de consulta do tipo %d, descricao '%s' e PID %d\n", c.tipo, c.descricao, c.pid_consulta );  
     fclose ( file );
   }
-  else perror ( "Erro na leitura de PedidoConsulta.txt" );
+  else perror ( " - Erro na leitura de PedidoConsulta.txt" );
 }
 
 void verificar_vagas (){
@@ -58,7 +71,7 @@ void verificar_vagas (){
     }
   }
   if ( indice_da_lista == 10 ){
-    printf ( "Lista de consultas cheia\n" );
+    printf ( " - Lista de consultas cheia\n" );
     kill ( c.pid_consulta, SIGUSR2 );
     cperdidas++;
   }
@@ -69,7 +82,7 @@ void inserir_consulta (){
   lista_consultas[indice_da_lista-1].tipo = c.tipo;
   strncpy ( lista_consultas[indice_da_lista-1].descricao, c.descricao, 99 );
   lista_consultas[indice_da_lista-1].pid_consulta = c.pid_consulta;    
-  printf ( "Consulta agendada para a sala %d\n", indice_da_lista );
+  printf ( " + Consulta agendada para a sala %d\n", indice_da_lista );
   switch ( c.tipo ){
     case 1:
       cnormal++;
@@ -81,6 +94,7 @@ void inserir_consulta (){
       curgente++;
       break;
   }
+  iniciar_consulta();
 }
 
 void iniciar_consulta (){
@@ -88,7 +102,7 @@ void iniciar_consulta (){
   if ( !parent ){
     kill ( c.pid_consulta, SIGHUP );
     sleep ( 10 );
-    printf ( "Consulta terminada na sala %d\n", indice_da_lista );
+    printf ( " + Consulta terminada na sala %d\n\n", indice_da_lista );
     kill ( c.pid_consulta, SIGTERM );
     exit ( 0 );
   }
@@ -108,4 +122,5 @@ void desligar_servidor (){
   fwrite ( &ccovid19, sizeof( ccovid19 ), 1, file );
   fwrite ( &curgente, sizeof( curgente ), 1, file );
   n = 1;
+  printf ( "\n - Servidor encerrado.\n" );
 }

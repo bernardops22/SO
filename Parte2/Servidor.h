@@ -12,8 +12,9 @@ int cperdidas = 0;   //S1
 int cnormal = 0;     //S1
 int ccovid19 = 0;    //S1
 int curgente = 0;    //S1
-int indice_da_lista = 1; 
+int indice_da_lista; 
 
+void iniciar_servidor ();
 void limpar_lista_consultas (); //S1
 void registar_pid ();           //S2
 void armar_sinal ();            //S3 S4

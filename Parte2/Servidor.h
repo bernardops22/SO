@@ -1,11 +1,9 @@
-#ifndef __SERVIDOR_H__
-#define __SERVIDOR_H__
 #include "header.h"
+
+#define PID_MAX sizeof(int)*5
 
 Consulta lista_consultas[10];
 Consulta c;
-
-#define PID_MAX sizeof(int)*5
 
 int n = 0;
 int cperdidas = 0;   //S1
@@ -22,7 +20,6 @@ void trata_sinal ();            //S3 S4
 void nova_consulta ();          //S3.1 S3.2
 void verificar_vagas ();        //S3.3
 void inserir_consulta ();       //S3.4
+void temporizador();
 void iniciar_consulta ();       //S3.4 S3.4.1
 void desligar_servidor ();      //S4
-
-#endif

@@ -1,7 +1,6 @@
 #include "Cliente.h"
 
 int main () {
-  system ( "clear" );
   iniciar_cliente ();
   nova_consulta ();
   pedido_consulta ();
@@ -32,14 +31,14 @@ void nova_consulta (){
 }
 
 void pedido_consulta (){
-  FILE *file = fopen ( "PedidoConsulta.txt", "r" );
+  FILE *file = fopen ( PEDIDO_CONSULTA, "r" );
   if ( file != NULL ){
     fclose ( file );
     printf ( " - Erro: Tentado novamente. Por favor aguarde 10 segundos.\n" );
     alarm ( 10 );
   }
   else{
-    FILE *file = fopen ( "PedidoConsulta.txt", "a" );
+    FILE *file = fopen ( PEDIDO_CONSULTA, "a" );
     fprintf ( file, "%d\n%s\n%d", c.tipo, c.descricao, c.pid_consulta );
     fclose ( file );
     get_srv_pid ();
@@ -48,7 +47,7 @@ void pedido_consulta (){
 
 void get_srv_pid (){
   char temp[11];
-  FILE* file = fopen ( "SrvConsultas.pid", "r" );
+  FILE* file = fopen ( SERVIDOR_PID, "r" );
   if ( file != NULL ) {
     fgets ( temp, 10, file );
     contactar_servidor ( atoi( temp ) );
@@ -57,7 +56,7 @@ void get_srv_pid (){
   else{
     perror ( " - Erro: Servidor inativo" );
     printf( "\n" );
-    remove ( "PedidoConsulta.txt" );
+    remove ( PEDIDO_CONSULTA );
     exit (0);
   }
 }
@@ -78,7 +77,7 @@ void trata_sinal ( int sinal ){
   switch ( sinal ){
    case SIGHUP:
      printf ( " + Consulta iniciada para o processo %d.\n", PID );
-     remove ( "PedidoConsulta.txt" );
+     remove ( PEDIDO_CONSULTA );
      n = 2;
      break; 
    case SIGTERM: 
@@ -90,11 +89,11 @@ void trata_sinal ( int sinal ){
      break;
    case SIGUSR2:
      printf ( " - Consulta nao e possivel para o processo %d.\n\n", PID );
-     remove ( "PedidoConsulta.txt" );
+     remove ( PEDIDO_CONSULTA );
      n = 1;
      break;
    case SIGINT: 
-     remove ( "PedidoConsulta.txt" );
+     remove ( PEDIDO_CONSULTA );
      printf ( "\n - Paciente cancelou o pedido.\n\n" );
      n = 1;
      break; 

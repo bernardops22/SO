@@ -2,7 +2,7 @@
 
 int main (){
   iniciar_servidor();
-  limpar_lista_consultas ( lista_consultas );
+  limpar_lista_consultas ();
   registar_pid ();
   armar_sinal ();
   while ( n != 1 ) pause();
@@ -19,13 +19,13 @@ void iniciar_servidor (){
   printf ( "\n + Servidor iniciado com sucesso.\n + A aguardar pedidos de consulta.\n\n" );
 }
 
-void limpar_lista_consultas ( Consulta lista_consultas[] ){
+void limpar_lista_consultas (){
   for ( int i = 0; i < 10; i++ )
     lista_consultas[i].tipo = -1;
 }
 
 void registar_pid (){
-  FILE * file = fopen ( "SrvConsultas.pid", "w" );
+  FILE * file = fopen ( SERVIDOR_PID, "w" );
   fprintf ( file, "%d", getpid() );
   fclose ( file ); 
 }
@@ -50,7 +50,7 @@ void trata_sinal ( int sinal ){
 }
 
 void nova_consulta (){
-  FILE * file = fopen ( "PedidoConsulta.txt", "r" );
+  FILE * file = fopen ( PEDIDO_CONSULTA, "r" );
   if ( file != NULL ){
     char line[100];
     c.tipo = atoi ( fgets( line, sizeof( int ), file ) );
@@ -97,17 +97,27 @@ void inserir_consulta (){
   iniciar_consulta();
 }
 
+void temporizador(){
+  printf ( " + Tempo restante: " );
+  for ( int i = 10; i > 0; i-- ){
+    fflush( stdout );
+    printf ( "%d ", i );
+    sleep ( 1 );
+  }
+  printf ( "\n" );
+}
+
 void iniciar_consulta (){
   pid_t parent = fork ();
   if ( !parent ){
     kill ( c.pid_consulta, SIGHUP );
-    sleep ( 10 );
+    temporizador();
     printf ( " + Consulta terminada na sala %d\n\n", indice_da_lista );
     kill ( c.pid_consulta, SIGTERM );
     exit ( 0 );
   }
   else  {
-    wait (NULL);
+    wait ( NULL );
     lista_consultas[indice_da_lista-1].tipo = -1;
     memset ( lista_consultas[indice_da_lista-1].descricao, 0, 99 );
     lista_consultas[indice_da_lista-1].pid_consulta = 0;
@@ -115,8 +125,8 @@ void iniciar_consulta (){
 }
 
 void desligar_servidor (){
-  remove ( "SrvConsultas.pid" );
-  FILE * file = fopen ( "StatsConsultas.dat", "a" );
+  remove ( SERVIDOR_PID );
+  FILE * file = fopen ( STATS_CONSULTAS, "w" );
   fwrite ( &cperdidas, sizeof( cperdidas ), 1, file );
   fwrite ( &cnormal, sizeof( cnormal ), 1, file );
   fwrite ( &ccovid19, sizeof( ccovid19 ), 1, file );

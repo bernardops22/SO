@@ -8,6 +8,10 @@
 #include <string.h>
 #include <sys/wait.h>
 
+#define PEDIDO_CONSULTA "PedidoConsulta.txt"
+#define SERVIDOR_PID "SrvConsultas.pid"
+#define STATS_CONSULTAS "StatsConsultas.dat"
+
 typedef struct {
   int tipo; // Tipo de Consulta: 1-Normal, 2-COVID19, 3-Urgente
   char descricao[100]; // Descrição da Consulta

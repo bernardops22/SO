@@ -122,23 +122,23 @@ void temporizador(){
 
 void desligar_servidor (){
   remove ( SERVIDOR_PID );
-  FILE * rfile = fopen ( STATS_CONSULTAS, "r" );
-  if ( rfile != NULL){
+  FILE * rf = fopen ( STATS_CONSULTAS, "r" );
+  if ( rf != NULL){
     int temp[] = {0,0,0,0};
-    fseek( rfile, 0, SEEK_SET );
-    fread ( temp, sizeof ( int )*4, 1, rfile );
-    cperdidas = cperdidas + temp[0];
-    cnormal = cnormal + temp[1];
-    ccovid19 = ccovid19 + temp[2];
-    curgente = curgente + temp[3];
+    fseek( rf, 0, SEEK_SET );
+    fread ( temp, sizeof ( int )*4, 1, rf );
+    cperdidas += temp[0];
+    cnormal += temp[1];
+    ccovid19 += temp[2];
+    curgente += temp[3];
+    fclose ( rf );
   }
-  fclose ( rfile );
-  FILE * wfile = fopen ( STATS_CONSULTAS, "w" );
-  fwrite ( &cperdidas, sizeof( int ), 1, wfile );
-  fwrite ( &cnormal, sizeof( int ), 1, wfile );
-  fwrite ( &ccovid19, sizeof( int ), 1, wfile );
-  fwrite ( &curgente, sizeof( int ), 1, wfile );
-  fclose( wfile );
+  FILE * wf = fopen ( STATS_CONSULTAS, "w" );
+  fwrite ( &cperdidas, sizeof( int ), 1, wf );
+  fwrite ( &cnormal, sizeof( int ), 1, wf );
+  fwrite ( &ccovid19, sizeof( int ), 1, wf );
+  fwrite ( &curgente, sizeof( int ), 1, wf );
+  fclose( wf );
   n = 1;
   printf ( "\n - Servidor encerrado.\n" );
 }

@@ -38,19 +38,19 @@ void pedido_consulta (){
     alarm ( 10 );
   }
   else{
-    FILE *file = fopen ( PEDIDO_CONSULTA, "a" );
-    fprintf ( file, "%d\n%s\n%d", c.tipo, c.descricao, c.pid_consulta );
+    FILE *file = fopen ( PEDIDO_CONSULTA, "w" );
+    fprintf ( file, "%d,%s,%d", c.tipo, c.descricao, c.pid_consulta );
     fclose ( file );
     get_srv_pid ();
   }
 }
 
 void get_srv_pid (){
-  char temp[11];
+  char srv_pid[11];
   FILE* file = fopen ( SERVIDOR_PID, "r" );
   if ( file != NULL ) {
-    fgets ( temp, 10, file );
-    contactar_servidor ( atoi( temp ) );
+    fgets ( srv_pid, 10, file );
+    kill ( atoi ( srv_pid ) , SIGUSR1 );
     fclose ( file );
   }
   else{
@@ -59,10 +59,6 @@ void get_srv_pid (){
     remove ( PEDIDO_CONSULTA );
     exit (0);
   }
-}
-
-void contactar_servidor ( int srv_pid ){
-  kill ( srv_pid, SIGUSR1 );
 }
 
 void armar_sinal (){
@@ -81,11 +77,11 @@ void trata_sinal ( int sinal ){
      n = 2;
      break; 
    case SIGTERM: 
-     if ( n==2 ){
+     if ( n == 2 ){
       printf ( " + Consulta concluida para o processo %d.\n\n", PID );
       n = 1;
      }
-     else perror (" - Erro: A consulta ainda nao foi iniciada");
+     else perror ( " - Erro: A consulta ainda nao foi iniciada" );
      break;
    case SIGUSR2:
      printf ( " - Consulta nao e possivel para o processo %d.\n\n", PID );
@@ -93,8 +89,8 @@ void trata_sinal ( int sinal ){
      n = 1;
      break;
    case SIGINT: 
-     remove ( PEDIDO_CONSULTA );
      printf ( "\n - Paciente cancelou o pedido.\n\n" );
+     remove ( PEDIDO_CONSULTA );
      n = 1;
      break; 
    case SIGALRM:

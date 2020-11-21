@@ -52,11 +52,7 @@ void trata_sinal ( int sinal ){
 void nova_consulta (){
   FILE * file = fopen ( PEDIDO_CONSULTA, "r" );
   if ( file != NULL ){
-    char line[100];
-    c.tipo = atoi ( fgets( line, sizeof( int ), file ) );
-    fscanf ( file, "%[^\n]", c.descricao );
-    fgets ( line, 100, file );
-    c.pid_consulta = atoi ( fgets( line, PID_MAX, file ) );
+    fscanf( file , "%d,%100[^,]%*c%d", &c.tipo, &c.descricao, &c.pid_consulta );
     printf ( " + Chegou novo pedido de consulta do tipo %d, descricao '%s' e PID %d\n", c.tipo, c.descricao, c.pid_consulta );  
     fclose ( file );
   }
@@ -97,16 +93,6 @@ void inserir_consulta (){
   iniciar_consulta();
 }
 
-void temporizador(){
-  printf ( " + Tempo restante: " );
-  for ( int i = 10; i > 0; i-- ){
-    fflush( stdout );
-    printf ( "%d ", i );
-    sleep ( 1 );
-  }
-  printf ( "\n" );
-}
-
 void iniciar_consulta (){
   pid_t parent = fork ();
   if ( !parent ){
@@ -124,13 +110,35 @@ void iniciar_consulta (){
   }
 }
 
+void temporizador(){
+  printf ( " + Tempo restante: " );
+  for ( int i = 10; i > 0; i-- ){
+    fflush( stdout );
+    printf ( "%d ", i );
+    sleep ( 1 );
+  }
+  printf ( "\n" );
+}
+
 void desligar_servidor (){
   remove ( SERVIDOR_PID );
-  FILE * file = fopen ( STATS_CONSULTAS, "w" );
-  fwrite ( &cperdidas, sizeof( cperdidas ), 1, file );
-  fwrite ( &cnormal, sizeof( cnormal ), 1, file );
-  fwrite ( &ccovid19, sizeof( ccovid19 ), 1, file );
-  fwrite ( &curgente, sizeof( curgente ), 1, file );
+  FILE * rfile = fopen ( STATS_CONSULTAS, "r" );
+  if ( rfile != NULL){
+    int temp[] = {0,0,0,0};
+    fseek( rfile, 0, SEEK_SET );
+    fread ( temp, sizeof ( int )*4, 1, rfile );
+    cperdidas = cperdidas + temp[0];
+    cnormal = cnormal + temp[1];
+    ccovid19 = ccovid19 + temp[2];
+    curgente = curgente + temp[3];
+  }
+  fclose ( rfile );
+  FILE * wfile = fopen ( STATS_CONSULTAS, "w" );
+  fwrite ( &cperdidas, sizeof( int ), 1, wfile );
+  fwrite ( &cnormal, sizeof( int ), 1, wfile );
+  fwrite ( &ccovid19, sizeof( int ), 1, wfile );
+  fwrite ( &curgente, sizeof( int ), 1, wfile );
+  fclose( wfile );
   n = 1;
   printf ( "\n - Servidor encerrado.\n" );
 }

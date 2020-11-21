@@ -20,6 +20,6 @@ void trata_sinal ();            //S3 S4
 void nova_consulta ();          //S3.1 S3.2
 void verificar_vagas ();        //S3.3
 void inserir_consulta ();       //S3.4
-void temporizador();
 void iniciar_consulta ();       //S3.4 S3.4.1
+void temporizador();
 void desligar_servidor ();      //S4

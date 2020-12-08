@@ -1,27 +1,30 @@
 #ifndef __HEADER_H__
 #define __HEADER_H__
 
-//CLIENTE
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
-#include <sys/types.h>
+#include <unistd.h>
 #include <sys/ipc.h>
+#include <sys/types.h>
 #include <sys/msg.h>
-
 #include <signal.h>
+#include <string.h>
 
-#define MSGKEY 0x0a92439
+#define KEY 0x0a92439
 #define exit_on_error(s,m) if (s<0) { perror(m); exit(1);}
 
+#define PEDIDO 1
+#define INICIADA 2
+#define TERMINADA 3
+#define RECUSADA 4
+#define CANCELADA 5
+#define TAMANHOCONSULTA 100+sizeof(int)*2+2
+
 //SERVIDOR
+#include <sys/shm.h>
 
-//#include <string.h>
-//#include <sys/wait.h>
-
-//#define PEDIDO_CONSULTA "PedidoConsulta.txt"
-//#define SERVIDOR_PID "SrvConsultas.pid"
-//#define STATS_CONSULTAS "StatsConsultas.dat"
+#define exit_on_null(s,m) if (s==NULL) { perror(m); exit(1); }
+#define NCONSULTAS 10
 
 typedef struct {
   int tipo; // Tipo de Consulta: 1-Normal, 2-COVID19, 3-Urgente
@@ -29,5 +32,10 @@ typedef struct {
   int pid_consulta; // PID do processo que quer fazer a consulta
   int status; // Estado da consulta: 1-Pedido, 2-Iniciada, 3-Terminada, 4-Recusada, 5-Cancelada
 } Consulta;
+
+typedef struct { 
+    long tipo;
+    char texto[TAMANHOCONSULTA];
+} mensagem;
 
 #endif

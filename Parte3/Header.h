@@ -9,22 +9,16 @@
 #include <sys/msg.h>
 #include <signal.h>
 #include <string.h>
+#include <sys/sem.h>
 
 #define KEY 0x0a92439
 #define exit_on_error(s,m) if (s<0) { perror(m); exit(1);}
-
 #define PEDIDO 1
 #define INICIADA 2
 #define TERMINADA 3
 #define RECUSADA 4
 #define CANCELADA 5
 #define TAMANHOCONSULTA 100+sizeof(int)*2+2
-
-//SERVIDOR
-#include <sys/shm.h>
-
-#define exit_on_null(s,m) if (s==NULL) { perror(m); exit(1); }
-#define NCONSULTAS 10
 
 typedef struct {
   int tipo; // Tipo de Consulta: 1-Normal, 2-COVID19, 3-Urgente

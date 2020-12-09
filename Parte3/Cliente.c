@@ -5,7 +5,7 @@ int main () {
   nova_consulta ();
   pedido_consulta ();
   armar_SIGINT ();
-  while ( n != 1 ) receber_mensagens();
+  while ( n != 1 ) receber_mensagem();
 }
 
 void iniciar_cliente (){
@@ -37,14 +37,14 @@ void pedido_consulta (){
   mensagem m;
   m.tipo = PEDIDO;
   snprintf ( m.texto, TAMANHOCONSULTA, "%d,%s,%d", c.tipo, c.descricao, c.pid_consulta );
-  int status = msgsnd ( mq_id, &m, sizeof( m.texto ), 0 );                        //ENVIO DE MENSAGEM
+  int status = msgsnd ( mq_id, &m, sizeof( m.texto ), 0 );                          //ENVIO PEDIDO
   exit_on_error ( status, " - Erro ao enviar o pedido de consulta" );
   printf ( " + O pedido de consulta foi enviado.\n" );
 }
 
-void receber_mensagens (){
+void receber_mensagem (){
   mensagem m;
-  int status = msgrcv(mq_id, &m, sizeof( m.texto ), PID, 0);                        //RECEBER MENSAGEM
+  int status = msgrcv(mq_id, &m, sizeof( m.texto ), PID, 0);                        //RECEBER INICIO
   exit_on_error( status, " - Erro ao receber mensagem do servidor");
   tratar_mensagem( m.texto );
 }
@@ -76,8 +76,8 @@ void armar_SIGINT (){
 void trata_SIGINT (){
   mensagem m;
   m.tipo = PID;
-  sprintf ( m.texto, "%d", CANCELADA);
-  int status = msgsnd ( mq_id, &m, sizeof( m.texto ), 0 );                        //ENVIO DE MENSAGEM
+  snprintf ( m.texto, sizeof ( CANCELADA ), "%d", CANCELADA);
+  int status = msgsnd ( mq_id, &m, sizeof( m.texto ), 0 );                        //ENVIO CANCELAR
   exit_on_error ( status, " - Erro ao cancelar a consulta" );
   printf ( "\n - Paciente cancelou o pedido.\n" );
   n = 1;

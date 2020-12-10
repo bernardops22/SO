@@ -5,6 +5,7 @@
 #define PID_MAX sizeof(int)*5
 #define DURACAO 10
 #define NCONSULTAS 10
+#define NCONTADORES 4
 
 Consulta c;
 int sem_id;
@@ -18,14 +19,15 @@ int curgente;
 
 void iniciar_servidor ();
 void limpar_lista_consultas ();
-void armar_SIGINT ();
-void trata_SIGINT ();
 void receber_pedido ();
+void tratar_texto ();
 void tratar_pedido ();
 void verificar_vagas ();
 void inserir_consulta ( Consulta *mem, int indice_da_lista );
 void iniciar_consulta ( int indice_da_lista );
-void temporizador ();
-void cancelar_consulta ();
 void terminar_consulta ( int indice_da_lista );
+void libertar_sala ( int indice_da_lista );
+void cancelar_consulta ();
+void armar_SIGINT ();
+void mudar_semaforo ( int valor );
 void desligar_servidor ();

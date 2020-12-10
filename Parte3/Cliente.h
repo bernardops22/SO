@@ -12,4 +12,4 @@ void pedido_consulta ();
 void receber_mensagem ();
 void tratar_mensagem ();
 void armar_SIGINT ();
-void trata_SIGINT ();
+void cancelar_pedido ();

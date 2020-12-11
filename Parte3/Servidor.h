@@ -2,7 +2,6 @@
 #include <sys/shm.h>
 
 #define exit_on_null(s,m) if (s==NULL) { perror(m); exit(1); }
-#define PID_MAX sizeof(int)*5
 #define DURACAO 10
 #define NCONSULTAS 10
 #define NCONTADORES 4
@@ -12,10 +11,6 @@ int sem_id;
 int shm_id;
 int mq_id;
 int n = 0;
-int cperdidas;
-int cnormal;
-int ccovid19;
-int curgente;
 
 void iniciar_servidor ();
 void limpar_lista_consultas ();

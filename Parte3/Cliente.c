@@ -15,7 +15,7 @@ int main () {
 }
 
 void iniciar_cliente (){
-  //system ( "clear" );
+  system ( "clear" );
   printf ( "\n ----------Cliniq-IUL----------\n" );
   printf( " | Insira o tipo de consulta: |          A SUA SAUDE\n" );
   printf( " | 1 - Normal                 |      E O NOSSO OBJETIVO!\n" );
@@ -60,8 +60,9 @@ void receber_mensagem (){
 void tratar_mensagem ( int m ){
   switch ( m ){
     case INICIADA:
-      /*printf ( "   + Consulta iniciada para o processo %d.\n", PID );
-      int shm_id = shmget ( KEY, NCONSULTAS * sizeof( Consulta ) + sizeof ( int )*NCONTADORES, 0 );        //CRIAR SHARED MEMORY
+     printf ( "   + Consulta iniciada para o processo %d.\n", PID );
+     
+      /*int shm_id = shmget ( KEY, NCONSULTAS * sizeof( Consulta ) + sizeof ( int )*NCONTADORES, 0 );        //CRIAR SHARED MEMORY
   exit_on_error ( shm_id, " - Erro ao aceder a zona de memoria partilhada" );
   int* mem_cont = ( int * ) shmat ( shm_id, NULL, 0 );                      //FAZER dt
   exit_on_null ( mem_cont, " - Erro ao ligar a memoria partilhada" );

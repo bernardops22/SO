@@ -20,6 +20,13 @@
 #define CANCELADA 5
 #define TAMANHOCONSULTA 100+sizeof(int)*2+2
 
+//#define DURACAO 10
+//#define NCONSULTAS 10
+//#define NCONTADORES 4
+//#define exit_on_null(s,m) if (s==NULL) { perror(m); exit(1); }
+//#include <sys/shm.h>
+
+
 typedef struct {
   int tipo; // Tipo de Consulta: 1-Normal, 2-COVID19, 3-Urgente
   char descricao[100]; // Descrição da Consulta

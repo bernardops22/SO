@@ -71,8 +71,8 @@ void verificar_vagas (){
   mudar_semaforo ( 0 );
   Consulta* mem = ( Consulta * ) shmat ( shm_id, NULL, 0 );                      //FAZER dt
   exit_on_null ( mem, " - Erro ao ligar a memoria partilhada" );
-  for ( int i = 0; i < NCONSULTAS; i++ ){
-    if ( mem[i].tipo == -1 )
+  for ( int i = 0; i < NCONSULTAS; i++ )
+    if ( mem[i].tipo == -1 ){
       inserir_consulta ( mem, i );
       exit ( 0 );
     }
@@ -90,20 +90,26 @@ void verificar_vagas (){
 
 void inserir_consulta ( Consulta *mem, int indice_da_lista ){
   mem[indice_da_lista] = c;
+  //shmdt( mem );                                          //Dt
   printf ( "   + Consulta agendada para a sala %d\n", indice_da_lista );
   int* mem_cont = ( int * ) shmat ( shm_id, NULL, 0 );                      //FAZER dt
   exit_on_null ( mem_cont, " - Erro ao ligar a memoria partilhada" );
+  printf (" CONT: %d,%d,%d,%d\n", mem_cont[10], mem_cont[11], mem_cont[12], mem_cont[13] );
   switch ( c.tipo ){
     case 1:
       mem_cont[11]++;
+      printf (" CONT: %d\n", mem_cont[11]);
       break;
     case 2:
       mem_cont[12]++;
+      printf (" CONT: %d\n", mem_cont[12]);
       break;
     case 3:
       mem_cont[13]++;
+      printf (" CONT: %d\n", mem_cont[13]);
       break;
   }
+  //shmdt( mem_cont );                                          //Dt
   mudar_semaforo ( 1 );
   iniciar_consulta ( indice_da_lista );
 }
@@ -160,6 +166,7 @@ void desligar_servidor (){
   exit_on_null ( mem_cont, " - Erro ao ligar a memoria partilhada" );
   printf ( "\n   Perdidas | Normais | COVID-19 | Urgentes\n" );
   printf ( "      %d          %d         %d          %d\n", mem_cont[10], mem_cont[11], mem_cont[12], mem_cont[13] );
+  //shmdt( mem_cont );
   printf ( "\n   + Servidor encerrado.\n" );
   n = 1;
 }

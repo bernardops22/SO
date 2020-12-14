@@ -3,6 +3,7 @@
 int main (){
   iniciar_servidor();
   limpar_lista_consultas ();
+  limpar_contadores ();
   armar_sinal ();
   while ( n != 1 ){
     receber_pedido ();
@@ -29,6 +30,15 @@ void limpar_lista_consultas (){
   for ( int i = 0; i < NCONSULTAS; i++ )  mem[i].tipo = -1;
   mudar_semaforo ( 1 );
   shmdt( mem );
+}
+
+void limpar_contadores (){
+  int *mem_cont = ( int * ) shmat ( shm_id, NULL, 0 );
+  exit_on_null ( mem_cont, " - Erro ao ligar a memoria partilhada" );
+  mudar_semaforo ( 0 );
+  for ( int i = NCONSULTAS; i < NCONSULTAS + NCONTADORES; i++ ) mem_cont[i] = 0;
+  mudar_semaforo ( 1 );
+  shmdt ( mem_cont );
   printf ( "   + Memoria iniciada com sucesso\n" );
   printf ( "\n   + A aguardar pedidos de consulta.\n\n" );
 }

@@ -19,7 +19,7 @@ void iniciar_servidor (){
   mq_id = msgget ( KEY, IPC_CREAT | 0600 );                                                                          //CRIAR MESSAGE QUEUE
   exit_on_error ( mq_id, " - Erro ao criar a fila de mensagens." ); 
   printf ( "   + Lista de mensagens iniciada com sucesso\n" );
-  shm_id = shmget ( KEY, NCONSULTAS * sizeof( Consulta ) + sizeof ( int )*NCONTADORES, IPC_CREAT | 0600 );         //CRIAR SHARED MEMORY
+  shm_id = shmget ( KEY, NCONSULTAS * sizeof( Consulta ) + sizeof ( int )*NCONTADORES, IPC_CREAT | 0600 );           //CRIAR SHARED MEMORY
   exit_on_error ( shm_id, " - Erro ao aceder a zona de memoria partilhada." );
 }
 
@@ -68,21 +68,29 @@ void tratar_texto ( char texto[] ){
 
 void tratar_pedido () {
   signal ( SIGINT, SIG_IGN );
-  pid_t parent = fork ();
-  if ( parent < 0 ){
-   perror ( " - Erro ao tratar pedido de consulta\n" );
-   exit ( 0 );
-  }
-  if ( !parent ){
-    if ( verificar_vagas () ){
-      inserir_consulta ();
-      incrementar_contadores ();
-      iniciar_consulta ();
+  pid_t parent;
+  pid_t grandparent;
+  if ( parent = fork() ) waitpid ( parent, NULL, 0 );
+  else if ( !parent ){
+    if ( grandparent = fork () ) exit ( 0 );
+    else if ( !grandparent ){
+      if ( verificar_vagas () ){
+        inserir_consulta ();
+        incrementar_contadores ();
+        iniciar_consulta ();
+      }
+      else lista_cheia ();
+      exit ( 0 );
     }
-    else lista_cheia ();
+    else{
+      perror ( " - Erro ao tratar pedido de consulta" );
+      exit ( 0 );
+    }
+  }
+  else {
+    perror ( " - Erro ao tratar pedido de consulta" );
     exit ( 0 );
   }
-  else if ( waitpid ( parent, NULL, 0 ) < 0) perror(" - Falha ao libertar processo filho\n");
 }
 
 int verificar_vagas (){

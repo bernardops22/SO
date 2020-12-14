@@ -2,6 +2,8 @@
 
 #include <sys/sem.h>
 #include <sys/shm.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #define exit_on_error(s,m) if (s<0) { perror(m); exit(1);}
 #define exit_on_null(s,m) if (s==NULL) { perror(m); exit(1); }

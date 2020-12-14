@@ -45,7 +45,7 @@ void pedido_consulta (){
 void receber_mensagem (){
   while ( n != 1 ){
     mensagem m;
-    int msg_status = msgrcv( mq_id, &m, sizeof ( m.texto ), PID , 0 );                                                 //RECEBER INICIO
+    int msg_status = msgrcv( mq_id, &m, sizeof ( m.texto ), PID , 0 );                                               //RECEBER INICIO
     exit_on_error( msg_status, " - Erro ao receber mensagem do servidor");
     tratar_mensagem( atoi ( m.texto ) );
   }

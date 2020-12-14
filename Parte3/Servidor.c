@@ -59,6 +59,10 @@ void tratar_texto ( char texto[] ){
 void tratar_pedido () {
   signal ( SIGINT, SIG_IGN );
   pid_t parent = fork ();
+  if ( parent < 0 ){
+   perror ( " - Erro ao tratar pedido de consulta\n" );
+   exit ( 0 );
+  }
   if ( !parent ){
     if ( verificar_vagas () ){
       inserir_consulta ();
@@ -68,9 +72,7 @@ void tratar_pedido () {
     else lista_cheia ();
     exit ( 0 );
   }
-  else  {
-    //ELIMINAR ZOMBIES
-  }
+  else if ( waitpid ( parent, NULL, 0 ) < 0) perror(" - Falha ao libertar processo filho\n");
 }
 
 int verificar_vagas (){

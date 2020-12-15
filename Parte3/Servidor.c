@@ -5,10 +5,7 @@ int main (){
   limpar_lista_consultas ();
   limpar_contadores ();
   armar_sinal ();
-  while ( n != 1 ){
-    receber_pedido ();
-    signal ( SIGINT, desligar_servidor );
-  }
+  receber_pedido ();
 }
 
 void iniciar_servidor (){
@@ -44,15 +41,18 @@ void limpar_contadores (){
 }
 
 void receber_pedido (){
-  mensagem m;
-  int msg_status = msgrcv ( mq_id, &m, sizeof ( m.texto ), PEDIDO, 0 );                                            //RECEBER PEDIDO
-  if ( msg_status < 0 ) {
-    if ( errno != EINTR ) printf(" - Erro ao esperar pela mensagem: %s\n", strerror(errno));
-  } 
-  else {
-    tratar_texto ( m.texto );
-    printf ( "   + Chegou novo pedido de consulta do tipo %d, descricao '%s' e PID %d\n", c.tipo, c.descricao, c.pid_consulta );
-    tratar_pedido ();
+  while ( n != 1 ){
+    signal ( SIGINT, desligar_servidor );
+    mensagem m;
+    int msg_status = msgrcv ( mq_id, &m, sizeof ( m.texto ), PEDIDO, 0 );                                            //RECEBER PEDIDO
+    if ( msg_status < 0 ) {
+      if ( errno != EINTR ) printf(" - Erro ao esperar pela mensagem: %s\n", strerror(errno));
+    } 
+    else {
+      tratar_texto ( m.texto );
+      printf ( "   + Chegou novo pedido de consulta do tipo %d, descricao '%s' e PID %d\n", c.tipo, c.descricao, c.pid_consulta );
+      tratar_pedido ();
+    }
   }
 }
 

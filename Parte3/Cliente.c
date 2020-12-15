@@ -46,8 +46,15 @@ void receber_mensagem (){
   while ( n != 1 ){
     mensagem m;
     int msg_status = msgrcv( mq_id, &m, sizeof ( m.texto ), PID , 0 );                                               //RECEBER INICIO
-    exit_on_error( msg_status, " - Erro ao receber mensagem do servidor");
-    tratar_mensagem( atoi ( m.texto ) );
+    if ( msg_status < 0 ) {
+      if ( errno != EINTR ){
+        printf(" - Erro ao esperar pela mensagem: %s\n", strerror(errno));
+        n = 1;
+      }
+    } 
+    else {
+      tratar_mensagem( atoi ( m.texto ) );
+    }
   }
 }
 
@@ -55,17 +62,20 @@ void tratar_mensagem ( int m ){
   switch ( m ){
     case INICIADA:
      printf ( "   + Consulta iniciada para o processo %d.\n", PID );
+      c.status = 2;
       n = 2;
       break;
     case TERMINADA:
       if ( n == 2 ){
         printf ( "   + Consulta concluida para o processo %d.\n\n", PID );
+        c.status = 3;
         n = 1;
       }
       else printf ( " - Erro: A consulta ainda nao foi iniciada\n" );
       break;
     case RECUSADA:
       printf ( " - Consulta nao e possivel para o processo %d.\n\n", PID );
+      c.status = 4;
       n = 1;
       break;
   }
@@ -82,5 +92,6 @@ void cancelar_pedido (){
   snprintf ( m.texto, sizeof ( CANCELADA ), "%d", CANCELADA );
   int status = msgsnd ( mq_id, &m, sizeof( m.texto ), 0 );                                                           //ENVIO CANCELAR
   exit_on_error ( status, " - Erro ao cancelar a consulta" );
+  c.status = 5;
   n = 1;
 }

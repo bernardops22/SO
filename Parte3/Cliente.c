@@ -63,9 +63,10 @@ void tratar_mensagem ( int status ){
   switch ( status ){
     case INICIADA:
      printf ( "   + Consulta iniciada para o processo %d.\n", PID );
+     n = 2;
       break;
     case TERMINADA:
-      if ( c.status = INICIADA ){
+      if ( n == 2 ){
         printf ( "   + Consulta concluida para o processo %d.\n\n", PID );
         n = 1;
       }

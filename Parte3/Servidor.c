@@ -2,8 +2,6 @@
 
 int main (){
   iniciar_servidor();
-  limpar_lista_consultas ();
-  limpar_contadores ();
   armar_sinal ();
   receber_pedido ();
 }
@@ -16,8 +14,19 @@ void iniciar_servidor (){
   mq_id = msgget ( KEY, IPC_CREAT | 0600 );                                                                          //CRIAR MESSAGE QUEUE
   exit_on_error ( mq_id, " - Erro ao criar a fila de mensagens." ); 
   printf ( "   + Lista de mensagens iniciada com sucesso\n" );
-  shm_id = shmget ( KEY, NCONSULTAS * sizeof( Consulta ) + sizeof ( int )*NCONTADORES, IPC_CREAT | 0600 );           //CRIAR SHARED MEMORY
-  exit_on_error ( shm_id, " - Erro ao aceder a zona de memoria partilhada." );
+  if ( shmget ( KEY,  NCONSULTAS * sizeof( Consulta ) + sizeof ( int )*NCONTADORES, 0 ) < 0 ){
+    shm_id = shmget ( KEY, NCONSULTAS * sizeof( Consulta ) + sizeof ( int )*NCONTADORES, IPC_CREAT | 0600 );           //CRIAR SHARED MEMORY
+    exit_on_error ( shm_id, " - Erro ao aceder a zona de memoria partilhada." );
+    limpar_lista_consultas ();
+    limpar_contadores ();
+    printf ( "   + Memoria iniciada com sucesso\n" );
+  }
+  else{
+    shm_id = shmget ( KEY, NCONSULTAS * sizeof( Consulta ) + sizeof ( int )*NCONTADORES, 0 );
+    exit_on_error ( shm_id, " - Erro ao aceder a zona de memoria partilhada." );
+    printf ( "   + Memoria reutilizada com sucesso\n" );
+  }
+  printf ( "\n   + A aguardar pedidos de consulta.\n\n" );
 }
 
 void limpar_lista_consultas (){
@@ -36,38 +45,27 @@ void limpar_contadores (){
   for ( int i = NCONSULTAS; i < NCONSULTAS + NCONTADORES; i++ ) mem_cont[i] = 0;
   mudar_semaforo ( 1 );
   shmdt ( mem_cont );
-  printf ( "   + Memoria iniciada com sucesso\n" );
-  printf ( "\n   + A aguardar pedidos de consulta.\n\n" );
 }
 
 void receber_pedido (){
   while ( n != 1 ){
-    signal ( SIGINT, desligar_servidor );
     mensagem m;
-    int msg_status = msgrcv ( mq_id, &m, sizeof ( m.texto ), PEDIDO, 0 );                                            //RECEBER PEDIDO
+    int msg_status = msgrcv ( mq_id, &m, sizeof ( m.c ), PEDIDO, 0 );                                            //RECEBER PEDIDO
     if ( msg_status < 0 ) {
       if ( errno != EINTR ) printf(" - Erro ao esperar pela mensagem: %s\n", strerror(errno));
     } 
     else {
-      tratar_texto ( m.texto );
+      c.tipo = m.c.tipo;
+      strcpy ( c.descricao, m.c.descricao );
+      c.pid_consulta = m.c.pid_consulta;
+      c.status = m.c.status;
       printf ( "   + Chegou novo pedido de consulta do tipo %d, descricao '%s' e PID %d\n", c.tipo, c.descricao, c.pid_consulta );
       tratar_pedido ();
     }
   }
 }
 
-void tratar_texto ( char texto[] ){
-  char *pt;
-  pt = strtok ( texto, "," );
-  c.tipo = atoi ( pt );
-  pt = strtok ( NULL, "," );
-  strcpy ( c.descricao, pt );
-  pt = strtok ( NULL, "," );
-  c.pid_consulta = atoi ( pt );
-}
-
 void tratar_pedido () {
-  signal ( SIGINT, SIG_IGN );
   pid_t parent;
   pid_t grandparent;
   if ( parent = fork() ) waitpid ( parent, NULL, 0 );
@@ -112,8 +110,9 @@ void lista_cheia (){
   printf ( " - Lista de consultas cheia\n" );
   mensagem m;
   m.tipo = c.pid_consulta;
-  snprintf ( m.texto, sizeof ( RECUSADA ), "%d", RECUSADA );
-  int msg_status = msgsnd ( mq_id, &m, sizeof( m.texto ), 0 );                                                       //ENVIO RECUSADA
+  c.status = RECUSADA;
+  m.c = c;
+  int msg_status = msgsnd ( mq_id, &m, sizeof( m.c ), 0 );                                                       //ENVIO RECUSADA
   exit_on_error ( msg_status, " - Erro ao recusar a consulta" );
   int * mem_cont = ( int * ) shmat ( shm_id, NULL, 0 );
   exit_on_null ( mem_cont, " - Erro ao ligar a memoria partilhada" );
@@ -130,6 +129,7 @@ void inserir_consulta (){
   mem[indice_da_lista].tipo = c.tipo;
   strcpy( mem[indice_da_lista].descricao,  c.descricao);
   mem[indice_da_lista].pid_consulta = c.pid_consulta;  
+  mem[indice_da_lista].status = c.status;
   mudar_semaforo ( 1 );
   shmdt( mem );
   printf ( "   + Consulta agendada para a sala %d\n", indice_da_lista );
@@ -162,8 +162,15 @@ void armar_sinal (){
 void iniciar_consulta (){
   mensagem m;
   m.tipo = c.pid_consulta;
-  snprintf ( m.texto, sizeof( INICIADA ), "%d", INICIADA );
-  int msg_status = msgsnd ( mq_id, &m, sizeof( m.texto ), 0 );                                                       //ENVIO INICIADA
+  c.status = INICIADA;
+  Consulta * mem = ( Consulta * ) shmat ( shm_id, NULL, 0 );
+  exit_on_null ( mem, " - Erro ao ligar a memoria partilhada" );
+  mudar_semaforo ( 0 ); 
+  mem[indice_da_lista].status = c.status;
+  mudar_semaforo ( 1 );
+  shmdt( mem );
+  m.c = c;
+  int msg_status = msgsnd ( mq_id, &m, sizeof( m.c ), 0 );                                                       //ENVIO INICIADA
   exit_on_error ( msg_status, " - Erro ao iniciar a consulta" );
   alarm ( DURACAO );
   cancelar_consulta();
@@ -173,8 +180,9 @@ void terminar_consulta (){
   printf ( "   + Consulta terminada na sala %d.\n", indice_da_lista );
   mensagem m;
   m.tipo = c.pid_consulta;
-  snprintf ( m.texto, sizeof( TERMINADA ), "%d", TERMINADA );
-  int msg_status = msgsnd ( mq_id, &m, sizeof( m.texto ), 0 );                                                       //ENVIO TERMINADA
+  c.status = TERMINADA;
+  m.c = c;
+  int msg_status = msgsnd ( mq_id, &m, sizeof( m.c ), 0 );                                                       //ENVIO TERMINADA
   exit_on_error ( msg_status, " - Erro ao terminar a consulta" );
   libertar_sala ();
 }
@@ -190,22 +198,26 @@ void libertar_sala (){
 
 void cancelar_consulta (){
   mensagem m;
-  int msg_status = msgrcv( mq_id, &m, sizeof( m.texto ), c.pid_consulta, 0);                                         //RECEBER CANCELADA
+  int msg_status = msgrcv( mq_id, &m, sizeof( m.c ), c.pid_consulta, 0);                                         //RECEBER CANCELADA
   if ( msg_status < 0 ) {
     	if ( errno != EINTR ) printf(" - Erro ao esperar pela mensagem: %s\n", strerror(errno));
     } 
   else{
-      if ( atoi( m.texto ) == CANCELADA ) printf ( " - Consulta cancelada pelo utilizador %d.\n", c.pid_consulta );
+      if ( m.c.status == CANCELADA ) printf ( " - Consulta cancelada pelo utilizador %d.\n", c.pid_consulta );
       terminar_consulta ();
     }
 }
 
 void mudar_semaforo ( int valor ){
-  int status = semctl( sem_id, 0, SETVAL, valor );
-  exit_on_error( status, " - Erro ao alterar valor do semaforo" );
+  if ( semget ( KEY, 1, 0 ) > 0 ){
+    int status = semctl( sem_id, 0, SETVAL, valor );
+    exit_on_error( status, " - Erro ao alterar valor do semaforo" );
+  }
 }
 
 void desligar_servidor (){
+  if ( c.status == INICIADA ) terminar_consulta ();
+  else{
   int * mem_cont = ( int * ) shmat( shm_id, NULL, 0 );
   exit_on_null ( mem_cont, " - Erro ao ligar a memoria partilhada" );
   mudar_semaforo ( 0 );
@@ -218,4 +230,6 @@ void desligar_servidor (){
   int sem_status = semctl ( sem_id, 0, IPC_RMID );                                                                   //REMOVER SEMAFORO
   exit_on_error ( sem_status , " - Erro ao remover fila de mensagens" );
   n = 1;
+  signal ( SIGINT, SIG_IGN );
+  }
 }

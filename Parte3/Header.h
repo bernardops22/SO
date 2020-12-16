@@ -13,7 +13,6 @@
 
 #define KEY 0x0a92439
 #define exit_on_error(s,m) if (s<0) { perror(m); exit(1);}
-#define TAMANHOCONSULTA 100+sizeof(int)*2+2
 #define PEDIDO 1
 #define INICIADA 2
 #define TERMINADA 3
@@ -29,7 +28,7 @@ typedef struct {
 
 typedef struct { 
     long tipo;
-    char texto[TAMANHOCONSULTA];
+    Consulta c;
 } mensagem;
 
 #endif

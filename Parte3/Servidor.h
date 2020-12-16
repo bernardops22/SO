@@ -24,7 +24,6 @@ void iniciar_servidor ();           //S1
 void limpar_lista_consultas ();     //S1
 void limpar_contadores ();          //S1
 void receber_pedido ();             //S2 S3.1 S3.2 S5
-void tratar_texto ();               //S3.1
 void tratar_pedido ();              //S3.3 S3.3.1 S3.3.2
 int verificar_vagas ();             //S3.3.1 S3.3.2
 void lista_cheia ();                //S3.3.1

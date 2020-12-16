@@ -36,8 +36,8 @@ void pedido_consulta (){
   mq_id = msgget ( KEY, 0 );
   exit_on_error ( mq_id, " - Message queue nao encontrada" );
   m.tipo = PEDIDO;
-  snprintf ( m.texto, TAMANHOCONSULTA, "%d,%s,%d", c.tipo, c.descricao, c.pid_consulta );
-  int status = msgsnd ( mq_id, &m, sizeof( m.texto ), 0 );                                                           //ENVIO PEDIDO
+  m.c = c;
+  int status = msgsnd ( mq_id, &m, sizeof( m.c ), 0 );                                                                 //ENVIO PEDIDO
   exit_on_error ( status, " - Erro ao enviar o pedido de consulta" );
   printf ( "   + O pedido de consulta foi enviado.\n" );
 }
@@ -45,7 +45,7 @@ void pedido_consulta (){
 void receber_mensagem (){
   while ( n != 1 ){
     mensagem m;
-    int msg_status = msgrcv( mq_id, &m, sizeof ( m.texto ), PID , 0 );                                               //RECEBER INICIO
+    int msg_status = msgrcv( mq_id, &m, sizeof ( m.c ), PID , 0 );                                               //RECEBER INICIO
     if ( msg_status < 0 ) {
       if ( errno != EINTR ){
         printf(" - Erro ao esperar pela mensagem: %s\n", strerror(errno));
@@ -53,29 +53,26 @@ void receber_mensagem (){
       }
     } 
     else {
-      tratar_mensagem( atoi ( m.texto ) );
+      c.status = m.c.status;
+      tratar_mensagem( m.c.status );
     }
   }
 }
 
-void tratar_mensagem ( int m ){
-  switch ( m ){
+void tratar_mensagem ( int status ){
+  switch ( status ){
     case INICIADA:
      printf ( "   + Consulta iniciada para o processo %d.\n", PID );
-      c.status = 2;
-      n = 2;
       break;
     case TERMINADA:
-      if ( n == 2 ){
+      if ( c.status = INICIADA ){
         printf ( "   + Consulta concluida para o processo %d.\n\n", PID );
-        c.status = 3;
         n = 1;
       }
       else printf ( " - Erro: A consulta ainda nao foi iniciada\n" );
       break;
     case RECUSADA:
       printf ( " - Consulta nao e possivel para o processo %d.\n\n", PID );
-      c.status = 4;
       n = 1;
       break;
   }
@@ -89,9 +86,9 @@ void cancelar_pedido (){
   printf ( "\n   + Paciente cancelou o pedido.\n" );
   mensagem m;
   m.tipo = PID;
-  snprintf ( m.texto, sizeof ( CANCELADA ), "%d", CANCELADA );
-  int status = msgsnd ( mq_id, &m, sizeof( m.texto ), 0 );                                                           //ENVIO CANCELAR
+  c.status = CANCELADA;
+  m.c = c;
+  int status = msgsnd ( mq_id, &m, sizeof( m.c ), 0 );                                                           //ENVIO CANCELAR
   exit_on_error ( status, " - Erro ao cancelar a consulta" );
-  c.status = 5;
   n = 1;
 }

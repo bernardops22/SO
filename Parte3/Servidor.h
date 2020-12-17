@@ -14,7 +14,6 @@
 #define DURACAO 10
 
 Consulta c;
-int n = 0;
 int shm_id;
 int sem_id;
 int mq_id;
@@ -36,3 +35,4 @@ void libertar_sala ();
 void cancelar_consulta ();          //S3.3.3
 void mudar_semaforo ( int valor );
 void desligar_servidor ();          //S4
+int is_lista_limpa();              //S4

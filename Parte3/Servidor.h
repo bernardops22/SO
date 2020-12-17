@@ -14,6 +14,7 @@
 #define DURACAO 10
 
 Consulta c;
+int n = 0;
 int shm_id;
 int sem_id;
 int mq_id;

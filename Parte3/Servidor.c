@@ -49,6 +49,7 @@ void limpar_contadores (){
 }
 
 void receber_pedido (){
+  while ( n != 1 ){
     mensagem m;
     int msg_status = msgrcv ( mq_id, &m, sizeof ( m.c ), PEDIDO, 0 );                                            //RECEBER PEDIDO
     if ( msg_status < 0 ) {
@@ -62,6 +63,7 @@ void receber_pedido (){
       printf ( "   + Chegou novo pedido de consulta do tipo %d, descricao '%s' e PID %d.\n", c.tipo, c.descricao, c.pid_consulta );
       tratar_pedido ();
     }
+  }
 }
 
 void tratar_pedido () {
@@ -69,7 +71,7 @@ void tratar_pedido () {
   pid_t grandparent;
   if ( parent = fork() ) waitpid ( parent, NULL, 0 );
   else if ( !parent ){
-    if ( grandparent = fork () ) receber_pedido ();
+    if ( grandparent = fork () ) exit ( 0 );
     else if ( !grandparent ){
       if ( verificar_vagas () ){
         inserir_consulta ();
@@ -228,11 +230,16 @@ void mudar_semaforo ( int valor ){
 
 void desligar_servidor (){
   terminar_consulta ();
+  n = 1;
   if ( is_lista_limpa () ){
-    int mq_status = msgctl( mq_id , IPC_RMID, NULL );                                                                  //REMOVER MESSAGE QUEUE
-    exit_on_error ( mq_status, " - Erro ao remover fila de mensagens" );
-    int sem_status = semctl ( sem_id, 0, IPC_RMID );                                                                   //REMOVER SEMAFORO
-    exit_on_error ( sem_status , " - Erro ao remover semaforo" );
+    if ( mq_id > 0 ){
+      int mq_status = msgctl( mq_id , IPC_RMID, NULL );                                                                  //REMOVER MESSAGE QUEUE
+      exit_on_error ( mq_status, " - Erro ao remover fila de mensagens" );
+    }
+    if ( sem_id > 0 ){
+      int sem_status = semctl ( sem_id, 0, IPC_RMID );                                                                   //REMOVER SEMAFORO
+      exit_on_error ( sem_status , " - Erro ao remover semaforo" );
+    }
     int * mem_cont = ( int * ) shmat( shm_id, NULL, 0 );
     exit_on_null ( mem_cont, " - Erro ao ligar a memoria partilhada" );
     mudar_semaforo ( 0 ); 
@@ -240,7 +247,6 @@ void desligar_servidor (){
     printf ( "         %d         %d         %d          %d\n\n", mem_cont[10], mem_cont[11], mem_cont[12], mem_cont[13] );
     mudar_semaforo ( 1 );
     shmdt( mem_cont );
-    exit ( 0 );
   }
 }
 

@@ -22,7 +22,14 @@ void iniciar_cliente (){
 void nova_consulta (){
   c.pid_consulta = PID;
   c.status = PEDIDO;
-  scanf ( "%d", &c.tipo );
+  char buf[BUFSIZ];
+  int valor, final;
+  fflush(stdout);
+  while ( fgets ( buf, sizeof buf, stdin ) == NULL || sscanf ( buf, "%d%n", &valor, &final ) != 1 ||  !isspace ( buf[final] ) ){
+    printf ( " - Erro: Tipo de consulta invalido.\n\n" );
+    exit ( 0 );
+  }
+  c.tipo = valor;
   if ( c.tipo < 1 || c.tipo > 3 ){ 
     printf ( " - Erro: Tipo de consulta invalido.\n\n" ); 
     exit ( 0 );

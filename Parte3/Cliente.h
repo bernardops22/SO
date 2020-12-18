@@ -1,4 +1,5 @@
 #include "Header.h"
+#include <ctype.h>
 
 #define PID getpid ()
 

@@ -53,16 +53,16 @@ O módulo de Servidor de Consultas é responsável pelas seguintes tarefas:
 
 ​	**S3.1)** Lê a informação da mensagem;
 
-​	**S3.2)** Escreve no ecrã a mensagem “Chegou novo pedido de consulta do tipo <tipo>, descrição <descricaoo> e PID <pidconsulta>” com os campos preenchidos corretamente;
+​	**S3.2)** Escreve no ecrã a mensagem “Chegou novo pedido de consulta do tipo <tipo_>, descrição <descrição> e PID <pid_consulta>” com os campos preenchidos corretamente;
 
 ​	**S3.3)** O módulo Servidor cria um processo filho (fork) que irá ser o servidor dedicado a este cliente. O servidor principal volta a esperar novas mensagens de clientes. Por sua vez, o servidor dedicado:
 
-​		**S3.3.1)** Verifica se a Lista de Consultas tem alguma “vaga”. Se todas as entradas da Lista de Consultas estiverem ocupadas, escreve no ecrã “Lista de consultas cheia”, manda uma mensagem 4-Recusada ao processo <pidconsulta>, e incrementa o contador de consultas perdidas;
+​		**S3.3.1)** Verifica se a Lista de Consultas tem alguma “vaga”. Se todas as entradas da Lista de Consultas estiverem ocupadas, escreve no ecrã “Lista de consultas cheia”, manda uma mensagem 4-Recusada ao processo <pid_consulta>, e incrementa o contador de consultas perdidas;
 
-​		**S3.3.2)** Se a Lista de Consultas tiver vaga, insere a consulta na lista de consultas, com os campos devidamente preenchidos, escreve no ecrã “Consulta agendada para a sala <indicedalista>”, e incrementa o contador de consultas do tipo correspondente. Envia uma mensagem 2-Iniciada ao processo <pidconsulta> correspondente, a indicar o início da consulta. Aguarda DURACAO segundos e escreve no ecrã “Consulta terminada na sala <indicedalista>”. Envia a mensagem 3-Terminada e termina o processo servidor dedicado (filho);
+​		**S3.3.2)** Se a Lista de Consultas tiver vaga, insere a consulta na lista de consultas, com os campos devidamente preenchidos, escreve no ecrã “Consulta agendada para a sala <índice_da_lista>”, e incrementa o contador de consultas do tipo correspondente. Envia uma mensagem 2-Iniciada ao processo <pid_consulta> correspondente, a indicar o início da consulta. Aguarda DURACAO segundos e escreve no ecrã “Consulta terminada na sala <índice_da_lista>”. Envia a mensagem 3-Terminada e termina o processo servidor dedicado (filho);
 
-​		**S3.3.3)** Se, durante a DURACAO da consulta (entre as mensagens 2-Iniciada e a 3-Terminada), o cliente enviar a mensagem 5-Cancelada ao servidor dedicado (na mailbox com PID do cliente), o servidor dedicado deverá escrever no ecrã “Consulta cancelada pelo utilizador <pidconsulta>”, e termina o seu processo (filho).
+​		**S3.3.3)** Se, durante a DURACAO da consulta (entre as mensagens 2-Iniciada e a 3-Terminada), o cliente enviar a mensagem 5-Cancelada ao servidor dedicado (na mailbox com PID do cliente), o servidor dedicado deverá escrever no ecrã “Consulta cancelada pelo utilizador <pid_consulta>”, e termina o seu processo (filho).
 
-S4) O módulo Servidor de Consultas deve armar e tratar o sinal SIGINT, para que possa ser encerrado com o atalho CTRL+C, mostrando no ecrã o valor atual das estatísticas e termina o processo Servidor. Não precisa guardar os valores das estatísticas nem da lista de consultas em ficheiro, porque esses valores ficam guardados na Memória Partilhada, para quando correr novamente.
+**S4)** O módulo Servidor de Consultas deve armar e tratar o sinal SIGINT, para que possa ser encerrado com o atalho CTRL+C, mostrando no ecrã o valor atual das estatísticas e termina o processo Servidor. Não precisa guardar os valores das estatísticas nem da lista de consultas em ficheiro, porque esses valores ficam guardados na Memória Partilhada, para quando correr novamente.
 
 **S5) (extra)** O facto do servidor (pai) não ter previsto fazer wait() aos servidores dedicados (filhos) fará com que os mesmos fiquem num estado especial quando terminarem as suas consultas dedicadas. Desenhe e implemente uma solução para que tal não aconteça, fazendo com que o servidor (pai) ocasionalmente “liberte” os filhos que tem neste estado especial.
